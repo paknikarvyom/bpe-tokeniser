@@ -228,6 +228,15 @@ if __name__ == "__main__":
     tok.train(training_text, vocab_size=vocab_size, verbose=True)
     print(f"\n{tok}\n")
 
+    # ── Show training text as token string ──────────────────────
+    training_ids = tok.encode(training_text)
+    token_str = "|".join(f"[{tok.token_to_str(tid)}:{tid}]" for tid in training_ids)
+    print("═" * 60)
+    print("  Tokenised training text")
+    print("═" * 60)
+    print(f"  {token_str}")
+    print(f"  ({len(training_ids)} tokens)\n")
+
     # ── Encode / Decode loop ────────────────────────────────────
     print("═" * 60)
     print("  Encode / Decode")
@@ -251,4 +260,8 @@ if __name__ == "__main__":
         print("  Token details:")
         for tid in encoded:
             print(f"    {tid:>5d}  →  {tok.token_to_str(tid)!r}")
+
+        # Show the full input segmented into its token pieces.
+        token_str = "|".join(f"[{tok.token_to_str(tid)}]" for tid in encoded)
+        print(f"  Token string: {token_str}")
         print()
