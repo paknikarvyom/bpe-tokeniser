@@ -1,6 +1,6 @@
 # BPE Tokeniser v1
 
-A from-scratch **Byte-Pair Encoding** (BPE) tokeniser written in pure Python — no external dependencies.
+A from-scratch **Byte-Pair Encoding** (BPE) tokeniser written in pure Python, with no external dependencies.
 
 ## What is BPE?
 
@@ -25,7 +25,7 @@ You will be prompted to:
 
 1. **Paste training text** (blank line to finish)
 2. **Set vocabulary size** (default 300)
-3. **View the tokenised training text** — the full input segmented into BPE tokens with their IDs
+3. **View the tokenised training text**: The full input segmented into BPE tokens with their IDs
 4. **Encode / decode** any text interactively via the `>>>` prompt
 
 ### Example Output
