@@ -1,11 +1,10 @@
 """
-Byte-Pair Encoding (BPE) Tokeniser — v1
+Byte-Pair Encoding (BPE) Tokeniser - Version 1
 
 Train on raw text to learn a compact subword vocabulary,
 then encode / decode arbitrary strings using that vocabulary.
 
 Algorithm overview
-──────────────────
 1. Start with a base vocabulary of 256 single-byte tokens (0x00–0xFF).
 2. Scan the training corpus (represented as a list of byte sequences) and
    count every adjacent pair of tokens.
@@ -27,10 +26,10 @@ from typing import Optional
 class BPETokeniser:
     """A minimal, from-scratch Byte-Pair Encoding tokeniser."""
 
-    # Pre-tokenisation regex — splits on whitespace boundaries, punctuation,
+    # Pre-tokenisation regex: splits on whitespace boundaries, punctuation,
     # and digits so that merges stay within "word-like" chunks.
     _SPLIT_PAT = re.compile(
-        r"""'s|'t|'re|'ve|'m|'ll|'d"""   # common contractions
+        r"""'s|'t|'re|'ve|'m|'ll|'d"""     # common contractions
         r"""| ?\w+"""                      # optional leading space + word
         r"""| ?\d+"""                      # optional leading space + digits
         r"""| ?[^\s\w]+"""                 # optional leading space + punctuation
@@ -39,15 +38,13 @@ class BPETokeniser:
     )
 
     def __init__(self) -> None:
-        # ── Vocabulary ──────────────────────────────────────────────
+        # Vocabulary
         # vocab maps token_id → bytes
         self.vocab: dict[int, bytes] = {i: bytes([i]) for i in range(256)}
         # merges is an ordered list of (pair → new_id) learned during training
         self.merges: dict[tuple[int, int], int] = {}
 
-    # ------------------------------------------------------------------ #
-    #  Training                                                            #
-    # ------------------------------------------------------------------ #
+    #  Training
 
     def train(self, text: str, vocab_size: int = 512, verbose: bool = False) -> None:
         """Learn BPE merges from *text* until *vocab_size* tokens exist.
@@ -111,9 +108,7 @@ class BPETokeniser:
                 for ids, count in splits
             ]
 
-    # ------------------------------------------------------------------ #
-    #  Encoding                                                            #
-    # ------------------------------------------------------------------ #
+    #  Encoding
 
     def encode(self, text: str) -> list[int]:
         """Encode *text* into a list of token IDs."""
@@ -127,18 +122,16 @@ class BPETokeniser:
             token_ids.extend(ids)
         return token_ids
 
-    # ------------------------------------------------------------------ #
-    #  Decoding                                                            #
-    # ------------------------------------------------------------------ #
+    
+    #  Decoding
+
 
     def decode(self, ids: list[int]) -> str:
         """Decode a list of token IDs back into a string."""
         raw = b"".join(self.vocab[i] for i in ids)
         return raw.decode("utf-8", errors="replace")
 
-    # ------------------------------------------------------------------ #
-    #  Helpers                                                             #
-    # ------------------------------------------------------------------ #
+    #  Helpers
 
     @staticmethod
     def _merge_pair(ids: list[int], pair: tuple[int, int], new_id: int) -> list[int]:
@@ -154,9 +147,7 @@ class BPETokeniser:
                 i += 1
         return merged
 
-    # ------------------------------------------------------------------ #
-    #  Persistence                                                         #
-    # ------------------------------------------------------------------ #
+    #  Persistence
 
     def save(self, path: str) -> None:
         """Save merges to a plain-text file so the tokeniser can be reloaded."""
@@ -177,9 +168,7 @@ class BPETokeniser:
                 self.merges[(a, b)] = new_id
                 self.vocab[new_id] = self.vocab[a] + self.vocab[b]
 
-    # ------------------------------------------------------------------ #
-    #  Diagnostics                                                         #
-    # ------------------------------------------------------------------ #
+    #  Diagnostics
 
     def __repr__(self) -> str:
         return f"BPETokeniser(vocab_size={len(self.vocab)}, merges={len(self.merges)})"
@@ -188,15 +177,12 @@ class BPETokeniser:
         """Return a human-readable representation of a single token."""
         return self.vocab[token_id].decode("utf-8", errors="replace")
 
-
-# ====================================================================== #
-#  Demo                                                                    #
-# ====================================================================== #
+#  Demo
 
 if __name__ == "__main__":
     tok = BPETokeniser()
 
-    # ── Collect training text ───────────────────────────────────
+    # Collect training text
     print("═" * 60)
     print("  BPE Tokeniser — Training")
     print("═" * 60)
@@ -219,16 +205,16 @@ if __name__ == "__main__":
         print("No training text provided — exiting.")
         raise SystemExit(1)
 
-    # ── Vocab size ──────────────────────────────────────────────
+    # Vocab size
     raw = input("\nVocab size (default 300): ").strip()
     vocab_size = int(raw) if raw else 300
 
-    # ── Train ───────────────────────────────────────────────────
+    # Train
     print(f"\nTraining on {len(training_text)} chars, target vocab_size={vocab_size} …\n")
     tok.train(training_text, vocab_size=vocab_size, verbose=True)
     print(f"\n{tok}\n")
 
-    # ── Show training text as token string ──────────────────────
+    # Show training text as token string
     training_ids = tok.encode(training_text)
     token_str = "|".join(f"[{tok.token_to_str(tid)}:{tid}]" for tid in training_ids)
     print("═" * 60)
@@ -237,7 +223,7 @@ if __name__ == "__main__":
     print(f"  {token_str}")
     print(f"  ({len(training_ids)} tokens)\n")
 
-    # ── Encode / Decode loop ────────────────────────────────────
+    # Encode / Decode loop
     print("═" * 60)
     print("  Encode / Decode")
     print("═" * 60)
