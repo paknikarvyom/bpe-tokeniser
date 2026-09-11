@@ -8,12 +8,12 @@ Byte-Pair Encoding is a subword tokenisation algorithm widely used in modern lan
 
 ## Features
 
-- **Byte-level base vocabulary** (256 tokens) — handles any UTF-8 text, no unknown tokens
+- **Byte-level base vocabulary** (256 tokens): handles any UTF-8 text, no unknown tokens
 - **Pre-tokenisation** splits on word boundaries, contractions, digits, and punctuation
-- **Interactive CLI** — paste your own training corpus, set vocab size, and encode/decode in a loop
-- **Tokenised output** — see your training text segmented into learned tokens with inline IDs
-- **Save / Load** — persist learned merges to a plain-text file and reload later
-- **Zero dependencies** — only uses the Python standard library
+- **Interactive CLI**: paste your own training corpus, set vocab size, and encode/decode in a loop
+- **Tokenised output**: see your training text segmented into learned tokens with inline IDs
+- **Save / Load**: persist learned merges to a plain-text file and reload later
+- **Zero dependencies**: only uses the Python standard library
 
 ## Quick Start
 
